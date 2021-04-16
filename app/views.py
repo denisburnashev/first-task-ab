@@ -1,4 +1,5 @@
 from collections import Counter
+from django.http import HttpResponse
 
 from django.shortcuts import render
 
@@ -40,7 +41,10 @@ def landing(request):
 def stats(request):
     # Реализуйте логику подсчета отношения количества переходов к количеству показов страницы
     # Для вывода результат передайте в следующем формате:
-    return render(request, 'stats.html', context={
-        'test_conversion': counter_show['original'] / counter_click['original'],
-        'original_conversion': counter_show['test'] / counter_click['test'],
-    })
+    try:
+        return render(request, 'stats.html', context={
+            'test_conversion': counter_show['original'] / counter_click['original'],
+            'original_conversion': counter_show['test'] / counter_click['test'],
+        })
+    except ZeroDivisionError:
+        return HttpResponse('Еще не было посещений.')
